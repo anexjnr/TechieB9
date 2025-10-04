@@ -99,17 +99,22 @@ export async function loader() {
 export default function Index() {
   const { sections, news, testimonials } = useLoaderData() as {
     sections: Record<string, any>;
-    news: any[];
+    news: LatestNewsItem[];
     testimonials: any[];
   };
 
-  const defaultNews = [
+  const defaultNews: LatestNewsItem[] = [
     {
       id: "s1",
       title: "Q4 Highlights",
       excerpt: "Milestones across platform and growth.",
       image:
         "https://cdn.builder.io/api/v1/image/assets%2Fee358a6e64744467b38bd6a3468eaeb9%2F9aebb7e90f334acbb611405deeab415d?format=webp&width=1200&q=80",
+      link: null,
+      source: null,
+      imageUrl: undefined,
+      publishedAt: null,
+      fetchedAt: null,
     },
     {
       id: "s2",
@@ -117,6 +122,11 @@ export default function Index() {
       excerpt: "We expanded to Berlin.",
       image:
         "https://images.unsplash.com/photo-1556761175-129418cb2dfe?auto=format&fit=crop&w=1200&q=80",
+      link: null,
+      source: null,
+      imageUrl: undefined,
+      publishedAt: null,
+      fetchedAt: null,
     },
     {
       id: "s3",
@@ -124,6 +134,11 @@ export default function Index() {
       excerpt: "We're hiring across the stack.",
       image:
         "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
+      link: null,
+      source: null,
+      imageUrl: undefined,
+      publishedAt: null,
+      fetchedAt: null,
     },
   ];
   const defaultTestimonials = [
