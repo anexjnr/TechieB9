@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { prisma } from "../prisma";
 import { memoryDb, serveAssetFallback } from "../dbFallback";
+import { getLatestTechNews } from "../services/techNews";
 
 const router = Router();
 
@@ -9,17 +10,65 @@ router.get("/news", async (_req, res) => {
     "Cache-Control",
     "public, max-age=30, stale-while-revalidate=60",
   );
+
   try {
-    const items = await prisma.news.findMany({
+    const techNews = await getLatestTechNews();
+    const serializedTechNews = techNews.map((item) => ({
+      id: item.id,
+      title: item.title,
+      excerpt: item.description,
+      link: item.url,
+      imageUrl: item.imageUrl,
+      source: item.source,
+      publishedAt: item.publishedAt,
+      fetchedAt: item.fetchedAt,
+    }));
+
+    if (serializedTechNews.length >= 3) {
+      return res.json(serializedTechNews.slice(0, 3));
+    }
+
+    const legacyItems = await prisma.news.findMany({
       orderBy: { date: "desc" },
       include: { image: true } as any,
+      take: 3,
     });
-    if (!items || items.length === 0) return res.json(memoryDb.news);
-    res.json(items);
-  } catch (e) {
-    console.warn("Prisma news failed, using memory store", e.message || e);
-    res.json(memoryDb.news);
+
+    const legacySerialized = legacyItems.map((item) => ({
+      id: item.id,
+      title: item.title,
+      excerpt: item.excerpt,
+      link: null,
+      image: item.image,
+      source: null,
+      publishedAt: item.date,
+      fetchedAt: item.date,
+    }));
+
+    const combined = [...serializedTechNews, ...legacySerialized].slice(0, 3);
+    if (combined.length === 3) {
+      return res.json(combined);
+    }
+
+    if (combined.length > 0) {
+      return res.json(combined);
+    }
+  } catch (error) {
+    console.warn("Latest tech news feed failed", error);
   }
+
+  const fallback = (memoryDb.news || []).slice(0, 3).map((item) => ({
+    id: item.id,
+    title: item.title,
+    excerpt: item.excerpt,
+    link: null,
+    image: item.image,
+    source: null,
+    publishedAt: item.date,
+    fetchedAt: item.date,
+  }));
+
+  res.json(fallback);
 });
 
 router.get("/testimonials", async (_req, res) => {
