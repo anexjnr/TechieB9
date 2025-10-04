@@ -171,12 +171,15 @@ export default function Index() {
     let aborted = false;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 1800);
-    Promise.all([
+    Promise.all<[
+      LatestNewsItem[],
+      any[]
+    ]>([
       fetch("/api/news", { signal: controller.signal })
-        .then((r) => (r.ok ? r.json() : ([] as any[])))
+        .then(async (r) => (r.ok ? ((await r.json()) as LatestNewsItem[]) : []))
         .catch(() => []),
       fetch("/api/testimonials", { signal: controller.signal })
-        .then((r) => (r.ok ? r.json() : ([] as any[])))
+        .then(async (r) => (r.ok ? ((await r.json()) as any[]) : []))
         .catch(() => []),
     ])
       .then(([n, t]) => {
