@@ -14,6 +14,7 @@ import AnimatedTitle from "@/components/site/AnimatedTitle";
 import TiltCard from "@/components/site/TiltCard";
 import { Link, useLoaderData } from "react-router-dom";
 import { getIconByName } from "@/lib/iconMap";
+import type { LatestNewsItem } from "@shared/api";
 
 function AnimatedCounter({
   target,
