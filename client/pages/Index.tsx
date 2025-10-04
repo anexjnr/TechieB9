@@ -171,10 +171,7 @@ export default function Index() {
     let aborted = false;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 1800);
-    Promise.all<[
-      LatestNewsItem[],
-      any[]
-    ]>([
+    Promise.all<[LatestNewsItem[], any[]]>([
       fetch("/api/news", { signal: controller.signal })
         .then(async (r) => (r.ok ? ((await r.json()) as LatestNewsItem[]) : []))
         .catch(() => []),
@@ -674,7 +671,8 @@ export default function Index() {
                 decoding={idx === 0 ? "sync" : "async"}
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).onerror = null;
-                  (e.currentTarget as HTMLImageElement).src = "/placeholder.svg";
+                  (e.currentTarget as HTMLImageElement).src =
+                    "/placeholder.svg";
                 }}
               />
             );
@@ -701,7 +699,11 @@ export default function Index() {
                 className="rounded-2xl border border-primary/20 bg-transparent overflow-hidden glass-card"
               >
                 {readMoreUrl ? (
-                  <a href={readMoreUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={readMoreUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     {imgEl}
                   </a>
                 ) : (
