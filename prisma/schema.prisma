@@ -61,6 +61,18 @@ model News {
   enabled  Boolean @default(true)
 }
 
+model TechNews {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  url         String   @unique
+  imageUrl    String?
+  source      String?
+  publishedAt DateTime?
+  fetchedAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model Testimonial {
   id     String @id @default(cuid())
   author String
