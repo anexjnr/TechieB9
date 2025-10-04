@@ -160,7 +160,7 @@ export default function Index() {
     },
   ];
 
-  const [newsItems, setNewsItems] = useState<any[]>(
+  const [newsItems, setNewsItems] = useState<LatestNewsItem[]>(
     news && news.length ? news : defaultNews,
   );
   const [testiItems, setTestiItems] = useState<any[]>(
