@@ -10,3 +10,15 @@
 export interface DemoResponse {
   message: string;
 }
+
+export interface LatestNewsItem {
+  id: string;
+  title: string;
+  excerpt: string;
+  link: string | null;
+  image?: unknown;
+  imageUrl?: string | null;
+  source?: string | null;
+  publishedAt?: string | Date | null;
+  fetchedAt?: string | Date | null;
+}
